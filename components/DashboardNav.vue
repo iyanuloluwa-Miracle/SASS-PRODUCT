@@ -4,7 +4,7 @@
       <!-- Logo Section -->
       <div class="flex items-center">
         <div class="h-8 w-8 mr-2">
-          <img src="../assets/logo.svg" alt="BrieflyAI" />
+          <img src="../../public/logo.svg" alt="BrieflyAI" />
         </div>
         <span class="text-gray-800 font-bold text-xl">BrieflyAI</span>
       </div>
@@ -41,7 +41,7 @@
         <span class="text-gray-700">Iyanuloluwa</span>
         <div class="h-8 w-8 rounded-full bg-gray-200 overflow-hidden">
           <img 
-            src="../assets/creator.svg" 
+            src="../../public/creator.svg" 
             alt="Profile" 
             class="h-full w-full object-cover"
           />
