@@ -5,7 +5,7 @@
 <template>
   <header>
     <SignedOut>
-      <SignInButton />
+      <SignInButton signInUrl="/sign-in" />
     </SignedOut>
     <SignedIn>
       <UserButton />
