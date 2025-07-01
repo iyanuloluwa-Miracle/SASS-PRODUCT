@@ -16,10 +16,7 @@
         </div>
   
         <!-- Right Section -->
-        <router-link to="/sign-in" class="bg-[#ffa600] text-white font-medium px-4 py-2 rounded-lg hover:bg-[#ffd380] transition-colors">
-          Sign In
-         
-        </router-link>
+        <SignInButton signInUrl="/sign-in" class="bg-[#ffa600] text-white font-medium px-4 py-2 rounded-lg hover:bg-[#ffd380] transition-colors" />
       </div>
     </nav>
   </template>
