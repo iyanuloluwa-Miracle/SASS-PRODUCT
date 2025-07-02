@@ -1,25 +1,26 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gray-50">
-    <div class="flex flex-col items-center w-full max-w-md p-8 bg-white rounded-2xl shadow-2xl">
-      <!-- Custom Briefly Header -->
+  <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-amber-100 via-yellow-50 to-white">
+    <div class="flex flex-col items-center w-full max-w-md p-8 bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl border border-amber-100 hover:shadow-amber-200 transition-shadow duration-300">
+      <!-- Logo and Heading -->
       <div class="flex flex-col items-center mb-6">
-        <img src="/logo.svg" alt="BrieflyAI" class="h-12 w-12 mb-2" />
-        <h2 class="text-2xl font-bold text-gray-800 font-sans">Welcome to Briefly</h2>
-        <p class="text-gray-500 text-sm mt-1">Sign in to unlock document insights in seconds</p>
+        <img src="/logo.svg" alt="BrieflyAI" class="h-14 w-14 mb-2 drop-shadow-md" />
+        <h2 class="text-3xl font-extrabold text-gray-800 font-sans mb-1 tracking-tight">Welcome to Briefly</h2>
+        <p class="text-amber-600 text-base font-medium">Sign in to unlock document insights in seconds</p>
       </div>
+      <!-- Clerk SignIn Form -->
       <SignIn
         :localization="{ signIn: { start: { title: '', subtitle: '' } } }"
         :appearance="{
           variables: {
             colorPrimary: '#ffa600',
             colorText: '#222',
-            colorBackground: '#fff',
+            colorBackground: 'rgba(255,255,255,0.8)',
             colorInputBackground: '#f9fafb',
             colorInputText: '#222',
             colorInputBorder: '#ffd380',
             colorAlphaShade: '#ffd380',
             fontFamily: 'Darker Grotesque, sans-serif',
-            borderRadius: '1rem',
+            borderRadius: '1.5rem',
             colorDanger: '#e53e3e',
             colorSuccess: '#38a169',
             colorButtonText: '#fff',
@@ -27,18 +28,31 @@
             colorButtonHoverBackground: 'linear-gradient(90deg, #ffa600 0%, #ffd380 100%)',
           },
           elements: {
-            card: 'rounded-2xl shadow-lg border border-amber-100',
-            headerTitle: 'text-gray-800 font-bold text-xl',
-            headerSubtitle: 'text-gray-500 text-base',
+            card: 'rounded-3xl shadow-lg border border-amber-100 bg-white/90',
+            headerTitle: 'text-gray-800 font-extrabold text-2xl',
+            headerSubtitle: 'text-amber-600 text-base font-medium',
             formButtonPrimary: 'bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 text-white font-bold rounded-full px-6 py-2.5 shadow-md hover:from-amber-500 hover:to-amber-700 transition-all',
             formFieldInput: 'rounded-lg border border-amber-200 focus:border-amber-400 focus:ring-amber-400',
             footerAction: 'text-amber-500 hover:text-amber-600 font-semibold',
             socialButtonsBlockButton: 'rounded-full bg-white border border-amber-200 text-gray-800 font-semibold hover:bg-amber-50',
+            dividerRow: 'my-4 flex items-center',
+            dividerText: 'text-gray-400 text-xs font-semibold px-2',
           }
         }"
-        afterSignInUrl="/Profile"
-        afterSignUpUrl="/Profile"
+        afterSignInUrl="/profile"
+        afterSignUpUrl="/profile"
       />
+      <!-- Divider and Footer -->
+      <div class="w-full flex items-center my-6">
+        <div class="flex-grow border-t border-amber-100"></div>
+        <span class="mx-3 text-gray-400 text-xs font-semibold">or</span>
+        <div class="flex-grow border-t border-amber-100"></div>
+      </div>
+      <div class="w-full text-center mt-2">
+        <span class="text-gray-500 text-sm">Don't have an account?
+          <NuxtLink to="/sign-up" class="text-amber-600 font-semibold hover:underline ml-1">Sign up</NuxtLink>
+        </span>
+      </div>
     </div>
   </div>
 </template>

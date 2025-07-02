@@ -142,12 +142,10 @@
 
 <script>
 import { ref } from 'vue'
-import  DashboardNav from '../DashboardNav/DashboardNav.vue'
+
 
 export default {
-  components: {
-    DashboardNav
-  },
+ 
   setup() {
     const selectedFile = ref(null)
     const processing = ref(false)
@@ -261,4 +259,4 @@ export default {
     opacity: .5;
   }
 }
-</style>
+</style> 

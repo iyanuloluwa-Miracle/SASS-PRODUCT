@@ -16,7 +16,9 @@
         </div>
   
         <!-- Right Section -->
-        <SignInButton signInUrl="/sign-in" class="bg-[#ffa600] text-white font-medium px-4 py-2 rounded-lg hover:bg-[#ffd380] transition-colors" />
+        <NuxtLink to="/sign-in" class="bg-[#ffa600] text-white font-medium px-4 py-2 rounded-lg hover:bg-[#ffd380] transition-colors">
+          Sign In
+        </NuxtLink>
       </div>
     </nav>
   </template>
