@@ -1,5 +1,11 @@
 <template>
-  <div>
+  <div v-if="!isLoaded">
+    <!-- Loading spinner or message -->
+    <div class="flex items-center justify-center min-h-screen">
+      <span class="text-gray-500 text-lg">Checking authentication...</span>
+    </div>
+  </div>
+  <div v-else-if="isSignedIn && user">
     <DashboardNav/>
     
     <!-- Adjust margin-top for main content -->
@@ -12,6 +18,7 @@
           </h1>
           <p class="text-gray-600">into an easy-to-read summary!</p>
         </div>
+  
   
         <!-- Main Card -->
         <div class="bg-white rounded-xl shadow-lg p-8 mb-8">
@@ -140,109 +147,102 @@
   </div>
 </template>
 
-<script>
-import { ref } from 'vue'
+<script setup lang="ts">
+import { useRouter } from 'vue-router'
+import { ref, watchEffect } from 'vue'
 
+// useAuth and useUser are auto-imported by Nuxt 3 Clerk module
+const { isLoaded, isSignedIn } = useAuth()
+const { user } = useUser()
+const router = useRouter()
 
-export default {
- 
-  setup() {
-    const selectedFile = ref(null)
-    const processing = ref(false)
-    const isDragging = ref(false)
-    const currentStep = ref(1)
-    const summary = ref(null)
-
-    const handleFileSelect = (event) => {
-      const file = event.target.files[0]
-      if (file) {
-        selectedFile.value = file
-        processFile(file)
-      }
-    }
-
-    const handleFileDrop = (event) => {
-      const file = event.dataTransfer.files[0]
-      if (file && file.type === 'application/pdf') {
-        selectedFile.value = file
-        processFile(file)
-      }
-      isDragging.value = false
-    }
-
-    const processFile = async (file) => {
-      processing.value = true
-      currentStep.value = 1
-
-      try {
-        // Simulate processing time
-        await new Promise(resolve => setTimeout(resolve, 2000))
-        
-        summary.value = {
-          points: [
-            'Master Next.js fundamentals including routing, data fetching, and server-side rendering',
-            'Build modern, performant web applications with practical real-world examples',
-            'Learn advanced deployment strategies and optimization techniques',
-            'Understand state management and API integration in Next.js applications',
-            'Implement responsive designs and modern UI patterns'
-          ]
-        }
-
-        currentStep.value = 8
-      } catch (error) {
-        console.error('Error processing file:', error)
-      } finally {
-        processing.value = false
-      }
-    }
-
-    const downloadOriginal = () => {
-      if (selectedFile.value) {
-        const url = URL.createObjectURL(selectedFile.value)
-        const a = document.createElement('a')
-        a.href = url
-        a.download = selectedFile.value.name
-        document.body.appendChild(a)
-        a.click()
-        document.body.removeChild(a)
-        URL.revokeObjectURL(url)
-      }
-    }
-
-    const downloadSummary = () => {
-      if (summary.value) {
-        const content = summary.value.points.join('\n\n')
-        const blob = new Blob([content], { type: 'text/plain' })
-        const url = URL.createObjectURL(blob)
-        const a = document.createElement('a')
-        a.href = url
-        a.download = `summary-${selectedFile.value.name.replace('.pdf', '.txt')}`
-        document.body.appendChild(a)
-        a.click()
-        document.body.removeChild(a)
-        URL.revokeObjectURL(url)
-      }
-    }
-
-    const clearFile = () => {
-      selectedFile.value = null
-      summary.value = null
-      currentStep.value = 1
-    }
-
-    return {
-      selectedFile,
-      processing,
-      isDragging,
-      currentStep,
-      summary,
-      handleFileSelect,
-      handleFileDrop,
-      clearFile,
-      downloadOriginal,
-      downloadSummary
-    }
+watchEffect(() => {
+  if (isLoaded && !isSignedIn) {
+    router.replace('/sign-in')
   }
+})
+
+const selectedFile = ref(null)
+const processing = ref(false)
+const isDragging = ref(false)
+const currentStep = ref(1)
+const summary = ref(null)
+
+const handleFileSelect = (event) => {
+  const file = event.target.files[0]
+  if (file) {
+    selectedFile.value = file
+    processFile(file)
+  }
+}
+
+const handleFileDrop = (event) => {
+  const file = event.dataTransfer.files[0]
+  if (file && file.type === 'application/pdf') {
+    selectedFile.value = file
+    processFile(file)
+  }
+  isDragging.value = false
+}
+
+const processFile = async (file) => {
+  processing.value = true
+  currentStep.value = 1
+
+  try {
+    // Simulate processing time
+    await new Promise(resolve => setTimeout(resolve, 2000))
+    
+    summary.value = {
+      points: [
+        'Master Next.js fundamentals including routing, data fetching, and server-side rendering',
+        'Build modern, performant web applications with practical real-world examples',
+        'Learn advanced deployment strategies and optimization techniques',
+        'Understand state management and API integration in Next.js applications',
+        'Implement responsive designs and modern UI patterns'
+      ]
+    }
+
+    currentStep.value = 8
+  } catch (error) {
+    console.error('Error processing file:', error)
+  } finally {
+    processing.value = false
+  }
+}
+
+const downloadOriginal = () => {
+  if (selectedFile.value) {
+    const url = URL.createObjectURL(selectedFile.value)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = selectedFile.value.name
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+  }
+}
+
+const downloadSummary = () => {
+  if (summary.value) {
+    const content = summary.value.points.join('\n\n')
+    const blob = new Blob([content], { type: 'text/plain' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `summary-${selectedFile.value.name.replace('.pdf', '.txt')}`
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+  }
+}
+
+const clearFile = () => {
+  selectedFile.value = null
+  summary.value = null
+  currentStep.value = 1
 }
 </script>
 
