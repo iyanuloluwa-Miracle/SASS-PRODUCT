@@ -38,7 +38,7 @@
             dividerText: 'text-gray-400 text-xs font-semibold px-2',
           }
         }"
-        afterSignUpUrl="/profile"
+        afterSignUpUrl="/sign-in"
         afterSignInUrl="/profile"
       />
       <!-- Divider and Footer -->

@@ -83,7 +83,6 @@
 </template>
 
 <script>
-import DashboardNav from '../DashboardNav/DashboardNav.vue'
 import { ref } from 'vue'
 
 export default {
