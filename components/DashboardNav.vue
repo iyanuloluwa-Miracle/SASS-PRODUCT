@@ -30,7 +30,7 @@ const closeMobileMenu = () => {
       </div>
       
       <!-- Navigation Links (Centered) -->
-      <div class="hidden md:flex items-center justify-center flex-1 mx-4">
+      <div class="flex items-center justify-center flex-1 mx-4">
         <div class="flex space-x-6">
           <NuxtLink 
             to="/" 
@@ -38,13 +38,6 @@ const closeMobileMenu = () => {
             :class="{ 'text-amber-500': $route.path === '/' }"
           >
             Home
-          </NuxtLink>
-          <NuxtLink 
-            to="/Profile" 
-            class="text-gray-600 hover:text-amber-500 transition-colors"
-            :class="{ 'text-amber-500': $route.path === '/Profile' }"
-          >
-            Upload
           </NuxtLink>
           <NuxtLink 
             to="/Summaries" 
