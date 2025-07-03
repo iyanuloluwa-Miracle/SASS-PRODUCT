@@ -1,17 +1,22 @@
 import type { H3Event } from "h3";
 import { createUploadthing } from "uploadthing/h3";
 import type { FileRouter } from "uploadthing/h3";
+import { getAuth } from '@clerk/nuxt/server';
 
 const f = createUploadthing();
 
-const auth = (ev: H3Event) => ({ id: "fakeId" }); // Fake auth function - replace with your Clerk auth
+const auth = (ev: H3Event) => {
+  const { userId } = getAuth(ev);
+  if (!userId) return null;
+  return { id: userId };
+}; // Fake auth function - replace with your Clerk auth
 
 // FileRouter for your app, can contain multiple FileRoutes
 export const uploadRouter = {
   // Define as many FileRoutes as you like, each with a unique routeSlug
   pdfUploader: f({
     pdf: {
-      maxFileSize: "10MB",
+      maxFileSize: "32MB",
       maxFileCount: 1,
     },
   })
@@ -38,4 +43,4 @@ export const uploadRouter = {
     }),
 } satisfies FileRouter;
 
-export type UploadRouter = typeof uploadRouter; 
+export type UploadRouter = typeof uploadRouter;

@@ -13,7 +13,7 @@
       </div>
 
       <!-- Demo Showcase -->
-      <div class="flex flex-col lg:flex-row items-center justify-between gap-8 md:gap-12" ref="demoContent">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-8 md:gap-12" ref="demoContent">
         <!-- Left Side: Before -->
         <div class="w-full lg:w-1/2 bg-white rounded-xl shadow-lg p-4 relative" ref="beforeDemo">
           <div class="bg-gray-100 rounded-lg p-2 mb-3 text-sm font-medium text-gray-500 flex items-center">

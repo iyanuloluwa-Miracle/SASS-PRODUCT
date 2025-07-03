@@ -1,4 +1,4 @@
- <script setup>
+<script setup>
 import { ref } from 'vue'
 
 // useAuth and useUser are auto-imported by Clerk Nuxt module
@@ -72,27 +72,30 @@ const closeMobileMenu = () => {
     </div>
 
     <!-- Mobile Menu (Hidden by default) -->
-    <div v-if="isMobileMenuOpen" class="md:hidden bg-white mt-2 py-4 px-6 rounded-xl shadow-md">
-      <div class="flex flex-col space-y-4">
-        <NuxtLink 
-          to="/" 
-          class="text-gray-600 hover:text-amber-500 transition-colors"
+    <div
+      v-if="isMobileMenuOpen"
+      class="md:hidden fixed inset-0 z-50 bg-white/95 flex flex-col items-center justify-center font-sans"
+    >
+      <div class="w-full max-w-xs space-y-6 text-center">
+        <NuxtLink
+          to="/"
+          class="block text-lg font-semibold py-3 rounded-lg text-gray-700 hover:text-amber-500 transition-colors"
           :class="{ 'text-amber-500': $route.path === '/' }"
           @click="closeMobileMenu"
         >
           Home
         </NuxtLink>
-        <NuxtLink 
-          to="/Profile" 
-          class="text-gray-600 hover:text-amber-500 transition-colors"
+        <NuxtLink
+          to="/Profile"
+          class="block text-lg font-semibold py-3 rounded-lg text-gray-700 hover:text-amber-500 transition-colors"
           :class="{ 'text-amber-500': $route.path === '/Profile' }"
           @click="closeMobileMenu"
         >
           Upload
         </NuxtLink>
-        <NuxtLink 
-          to="/Summaries" 
-          class="text-gray-600 hover:text-amber-500 transition-colors"
+        <NuxtLink
+          to="/Summaries"
+          class="block text-lg font-semibold py-3 rounded-lg text-gray-700 hover:text-amber-500 transition-colors"
           :class="{ 'text-amber-500': $route.path === '/Summaries' }"
           @click="closeMobileMenu"
         >

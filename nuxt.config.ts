@@ -28,4 +28,15 @@ export default defineNuxtConfig({
       tailwindcss(),
     ],
   },
+  tailwindcss: {
+    config: {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Darker Grotesque', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+          },
+        },
+      },
+    },
+  },
 });
