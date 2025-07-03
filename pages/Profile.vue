@@ -27,6 +27,7 @@
             @dragover.prevent
             @drop.prevent="handleFileDrop"
             :class="{ 'border-amber-500': isDragging }">
+            <div v-if="errorMessage" class="mb-4 text-red-500 font-semibold">{{ errorMessage }}</div>
             <div v-if="!selectedFile && !processing">
               <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none"
                 viewBox="0 0 24 24" stroke="currentColor">
@@ -84,8 +85,8 @@
                       </svg>
                     </div>
                     <div>
-                      <h3 class="text-lg font-semibold text-gray-900">Mastering Next.js: Web Development Simplified</h3>
-                      <p class="text-sm text-gray-500">Step up your web development game with our comprehensive Next.js course!</p>
+                      <h3 class="text-lg font-semibold text-gray-900">{{ summary.title || 'Document Summary' }}</h3>
+                      <p class="text-sm text-gray-500">{{ summary.description || 'Summary of your uploaded document' }}</p>
                     </div>
                   </div>
                 </div>
@@ -148,7 +149,6 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
 import { ref, watchEffect } from 'vue'
 
 // useAuth and useUser are auto-imported by Nuxt 3 Clerk module
@@ -156,9 +156,26 @@ const { isLoaded, isSignedIn } = useAuth()
 const { user } = useUser()
 const router = useRouter()
 
+// Uploadthing composable
+const { startUpload, isUploading } = useUploadThing("pdfUploader", {
+  onClientUploadComplete: (res) => {
+    console.log("Files: ", res);
+    if (res && res.length > 0) {
+      uploadedFileUrl.value = res[0].ufsUrl;
+      console.log('File uploaded successfully:', res[0].ufsUrl);
+      processUploadedFile(res[0].ufsUrl);
+    }
+  },
+  onUploadError: (error: Error) => {
+    console.log(`ERROR! ${error.message}`);
+    errorMessage.value = 'Upload failed. Please try again.';
+    processing.value = false;
+  },
+});
+
 watchEffect(() => {
   if (isLoaded && !isSignedIn) {
-    router.replace('/sign-in')
+    navigateTo('/sign-in')
   }
 })
 
@@ -167,44 +184,86 @@ const processing = ref(false)
 const isDragging = ref(false)
 const currentStep = ref(1)
 const summary = ref(null)
+const errorMessage = ref('')
+const uploadedFileUrl = ref('')
 
-const handleFileSelect = (event) => {
+const handleFileSelect = async (event) => {
   const file = event.target.files[0]
   if (file) {
-    selectedFile.value = file
-    processFile(file)
+    await handleFileUpload([file])
   }
 }
 
-const handleFileDrop = (event) => {
+const handleFileDrop = async (event) => {
   const file = event.dataTransfer.files[0]
-  if (file && file.type === 'application/pdf') {
-    selectedFile.value = file
-    processFile(file)
+  if (file) {
+    await handleFileUpload([file])
   }
   isDragging.value = false
 }
 
-const processFile = async (file) => {
+const handleFileUpload = async (files: File[]) => {
+  errorMessage.value = ''
+  
+  if (!files || files.length === 0) return
+  
+  const file = files[0]
+  
+  // Validate file type
+  if (file.type !== 'application/pdf') {
+    errorMessage.value = 'Only PDF files are allowed.'
+    return
+  }
+  
+  // Validate file size (10MB limit)
+  if (file.size > 10 * 1024 * 1024) {
+    errorMessage.value = 'File must be less than 10MB.'
+    return
+  }
+  
+  selectedFile.value = file
   processing.value = true
   currentStep.value = 1
-
+  
   try {
-    // Simulate processing time
-    await new Promise(resolve => setTimeout(resolve, 2000))
+    // Upload file using Uploadthing
+    const uploadedFiles = await startUpload(files)
     
-    summary.value = {
-      points: [
-        'Master Next.js fundamentals including routing, data fetching, and server-side rendering',
-        'Build modern, performant web applications with practical real-world examples',
-        'Learn advanced deployment strategies and optimization techniques',
-        'Understand state management and API integration in Next.js applications',
-        'Implement responsive designs and modern UI patterns'
-      ]
+    if (uploadedFiles && uploadedFiles.length > 0) {
+      uploadedFileUrl.value = uploadedFiles[0].url
+      console.log('File uploaded successfully:', uploadedFiles[0].url)
+      
+      // Now process the uploaded file
+      await processUploadedFile(uploadedFiles[0].url)
     }
-
-    currentStep.value = 8
   } catch (error) {
+    errorMessage.value = 'Upload failed. Please try again.'
+    console.error('Upload error:', error)
+    processing.value = false
+  }
+}
+
+const processUploadedFile = async (fileUrl: string) => {
+  try {
+    // TODO: Replace with real API call to your backend
+    // Example API call:
+    // const response = await fetch('/api/process-document', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify({ fileUrl })
+    // })
+    // summary.value = await response.json()
+    
+    // For now, just simulate processing
+    await new Promise(resolve => setTimeout(resolve, 2000))
+    currentStep.value = 8
+    
+    // Don't set summary.value here - it should come from your backend API
+    // summary.value will remain null until you implement the real API call
+  } catch (error) {
+    errorMessage.value = 'An error occurred while processing your file.'
     console.error('Error processing file:', error)
   } finally {
     processing.value = false
@@ -212,26 +271,24 @@ const processFile = async (file) => {
 }
 
 const downloadOriginal = () => {
-  if (selectedFile.value) {
-    const url = URL.createObjectURL(selectedFile.value)
+  if (uploadedFileUrl.value) {
     const a = document.createElement('a')
-    a.href = url
-    a.download = selectedFile.value.name
+    a.href = uploadedFileUrl.value
+    a.download = selectedFile.value?.name || 'document.pdf'
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
-    URL.revokeObjectURL(url)
   }
 }
 
 const downloadSummary = () => {
-  if (summary.value) {
+  if (summary.value && summary.value.points.length > 0) {
     const content = summary.value.points.join('\n\n')
     const blob = new Blob([content], { type: 'text/plain' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `summary-${selectedFile.value.name.replace('.pdf', '.txt')}`
+    a.download = `summary-${selectedFile.value?.name?.replace('.pdf', '.txt') || 'document.txt'}`
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
@@ -242,7 +299,9 @@ const downloadSummary = () => {
 const clearFile = () => {
   selectedFile.value = null
   summary.value = null
+  uploadedFileUrl.value = ''
   currentStep.value = 1
+  errorMessage.value = ''
 }
 </script>
 

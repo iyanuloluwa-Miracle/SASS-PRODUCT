@@ -1,7 +1,21 @@
 <script setup>
+import { ref } from 'vue'
+
 // useAuth and useUser are auto-imported by Clerk Nuxt module
 const { isSignedIn } = useAuth()
 const { user } = useUser()
+
+// Mobile menu state
+const isMobileMenuOpen = ref(false)
+
+// Mobile menu functions
+const toggleMobileMenu = () => {
+  isMobileMenuOpen.value = !isMobileMenuOpen.value
+}
+
+const closeMobileMenu = () => {
+  isMobileMenuOpen.value = false
+}
 </script>
 
 <template>
@@ -18,20 +32,27 @@ const { user } = useUser()
       <!-- Navigation Links (Centered) -->
       <div class="hidden md:flex items-center justify-center flex-1 mx-4">
         <div class="flex space-x-6">
-          <router-link 
+          <NuxtLink 
             to="/" 
             class="text-gray-600 hover:text-amber-500 transition-colors"
             :class="{ 'text-amber-500': $route.path === '/' }"
           >
             Home
-          </router-link>
-          <router-link 
-            to="/summaries" 
+          </NuxtLink>
+          <NuxtLink 
+            to="/Profile" 
             class="text-gray-600 hover:text-amber-500 transition-colors"
-            :class="{ 'text-amber-500': $route.path === '/summaries' }"
+            :class="{ 'text-amber-500': $route.path === '/Profile' }"
+          >
+            Upload
+          </NuxtLink>
+          <NuxtLink 
+            to="/Summaries" 
+            class="text-gray-600 hover:text-amber-500 transition-colors"
+            :class="{ 'text-amber-500': $route.path === '/Summaries' }"
           >
             My Summaries
-          </router-link>
+          </NuxtLink>
         </div>
       </div>
 
@@ -60,42 +81,32 @@ const { user } = useUser()
     <!-- Mobile Menu (Hidden by default) -->
     <div v-if="isMobileMenuOpen" class="md:hidden bg-white mt-2 py-4 px-6 rounded-xl shadow-md">
       <div class="flex flex-col space-y-4">
-        <router-link 
+        <NuxtLink 
           to="/" 
           class="text-gray-600 hover:text-amber-500 transition-colors"
           :class="{ 'text-amber-500': $route.path === '/' }"
           @click="closeMobileMenu"
         >
           Home
-        </router-link>
-        <router-link 
-          to="/summaries" 
+        </NuxtLink>
+        <NuxtLink 
+          to="/Profile" 
           class="text-gray-600 hover:text-amber-500 transition-colors"
-          :class="{ 'text-amber-500': $route.path === '/summaries' }"
+          :class="{ 'text-amber-500': $route.path === '/Profile' }"
+          @click="closeMobileMenu"
+        >
+          Upload
+        </NuxtLink>
+        <NuxtLink 
+          to="/Summaries" 
+          class="text-gray-600 hover:text-amber-500 transition-colors"
+          :class="{ 'text-amber-500': $route.path === '/Summaries' }"
           @click="closeMobileMenu"
         >
           My Summaries
-        </router-link>
+        </NuxtLink>
       </div>
     </div>
   </nav>
 </template>
 
-<script>
-export default {
-  name: 'Navbar',
-  data() {
-    return {
-      isMobileMenuOpen: false
-    }
-  },
-  methods: {
-    toggleMobileMenu() {
-      this.isMobileMenuOpen = !this.isMobileMenuOpen
-    },
-    closeMobileMenu() {
-      this.isMobileMenuOpen = false
-    }
-  }
-}
-</script>
