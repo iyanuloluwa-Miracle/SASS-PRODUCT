@@ -14,6 +14,11 @@ export default defineNuxtConfig({
         {
           rel: 'stylesheet',
           href: 'https://fonts.googleapis.com/css2?family=Darker+Grotesque:wght@300..900&display=swap'
+        },
+        {
+          rel: 'icon',
+          type: 'image/svg+xml',
+          href: '/logo.svg'
         }
       ]
     }

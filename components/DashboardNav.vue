@@ -1,4 +1,4 @@
-<script setup>
+ <script setup>
 import { ref } from 'vue'
 
 // useAuth and useUser are auto-imported by Clerk Nuxt module

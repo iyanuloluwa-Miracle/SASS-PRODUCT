@@ -95,7 +95,7 @@
             Generate a Summary
           </h3>
           <p class="text-gray-600 mt-2">
-            Within seconds, you'll receive a beautifully formatted summary that
+            Within seconds, you’ll receive a beautifully formatted summary that
             highlights the key points.
           </p>
         </div>
